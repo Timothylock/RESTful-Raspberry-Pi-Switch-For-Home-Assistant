@@ -1,9 +1,10 @@
 from flask import Flask
 from flask import request
+import json
 app = Flask(__name__)
 
 # Variables
-curState = "off"
+isOn = False
 
 # App routes
 @app.route("/")
@@ -17,8 +18,6 @@ def state():
         return setState()
     elif request.method == "GET":
         return fetchState()
-    else:
-        return "OOPS", 400
 
 # Helper Functions
 def setState():
@@ -27,32 +26,36 @@ def setState():
     if "active" not in c:
         return "missing \"active\" field", 400
 
-    if c["active"] == "true":
-        turnOn()
-        return "turned on", 200
+    if c["active"]:
+        if turnOn():
+            return "turned on", 200
+        else:
+            return "failed to turn on", 500
 
-    if c["active"] == "false":
-        turnOff()
-        return "turned off", 200
+    if not c["active"]:
+        if turnOff():
+            return "turned off", 200
+        else:
+            return "failed to turn off", 500
 
     return "Invalid payload", 400
 
 def fetchState():
-    return curState, 200
+    return json.dumps({"is_active": isOn}), 200
 
 def turnOn():
-    global curState
-    curState = "on"
+    global isOn
+    isOn = True
 
-    # Implement this
-    pass
+    # Implement this. Return False on any error
+    return True
 
 def turnOff():
-    global curState
-    curState = "off"
+    global isOn
+    isOn = False
 
-    # Implement this
-    pass
+    # Implement this. Return False on any error
+    return True
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host="0.0.0.0")
