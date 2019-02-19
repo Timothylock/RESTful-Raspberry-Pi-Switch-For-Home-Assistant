@@ -9,7 +9,7 @@ isOn = False
 # App routes
 @app.route("/")
 def index():
-    return "It Works! Try interacting with /states instead"
+    return "It Works! Try interacting with /state instead"
 
 
 @app.route("/state", methods=['GET', 'POST'])
