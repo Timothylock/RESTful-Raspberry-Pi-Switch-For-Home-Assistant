@@ -32,7 +32,7 @@ def setState():
         else:
             return "failed to turn on", 500
 
-    if not c["active"] == "false":
+    if c["active"] == "false":
         if turnOff():
             return "turned off", 200
         else:
