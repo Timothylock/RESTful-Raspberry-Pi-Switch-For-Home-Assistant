@@ -26,13 +26,13 @@ def setState():
     if "active" not in c:
         return "missing \"active\" field", 400
 
-    if c["active"]:
+    if c["active"] == "true":
         if turnOn():
             return "turned on", 200
         else:
             return "failed to turn on", 500
 
-    if not c["active"]:
+    if not c["active"] == "false":
         if turnOff():
             return "turned off", 200
         else:
@@ -41,7 +41,7 @@ def setState():
     return "Invalid payload", 400
 
 def fetchState():
-    return json.dumps({"is_active": isOn}), 200
+    return json.dumps({"is_active": str(isOn).lower()}), 200
 
 def turnOn():
     global isOn
